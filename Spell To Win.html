@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spell to Win - Master Your Spelling Skills</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #0f172a;
+        }
+
+        /* Background Video */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 58, 138, 0.7) 100%);
+            z-index: 2;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(30, 58, 138, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+
+        .login-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .signup-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            height: calc(100vh - 70px);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            color: white;
+            z-index: 10;
+        }
+
+        .hero-section h1 {
+            font-size: 52px;
+            margin-bottom: 20px;
+            color: #f0f9ff;
+            line-height: 1.2;
+        }
+
+        .hero-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Floating Widgets */
+        .floating-widgets {
+            position: absolute;
+            top: 100px;
+            right: 40px;
+            width: 320px;
+            height: 500px;
+            perspective: 1000px;
+        }
+
+        .widget {
+            position: absolute;
+            width: 280px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: move;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            color: white;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .widget-header {
+            font-weight: 600;
+            font-size: 14px;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-close {
+            cursor: pointer;
+            color: #cbd5e1;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .widget-close:hover {
+            color: #ef4444;
+        }
+
+        .widget-content {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .widget-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+        }
+
+        .widget-label {
+            color: #94a3b8;
+        }
+
+        .widget-value {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .widget1 { top: 0; left: 0; }
+        .widget2 { top: 150px; left: 100px; }
+        .widget3 { top: 300px; left: 20px; }
+
+        /* Voice Selection */
+        .voice-selector {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 50;
+            min-width: 250px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .voice-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 12px;
+        }
+
+        .voice-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .voice-btn {
+            padding: 12px 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .voice-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.6);
+            color: #3b82f6;
+        }
+
+        .voice-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .voice-icon {
+            font-size: 16px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            margin: 50px auto;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-header {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #3b82f6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .close-btn {
+            color: #cbd5e1;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #3b82f6;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .widget {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .widget:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .widget:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .floating-widgets {
+                display: none;
+            }
+            
+            .main-content {
+                justify-content: center;
+            }
+            
+            .hero-section {
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            .hero-section h1 {
+                font-size: 36px;
+            }
+
+            .hero-section p {
+                font-size: 16px;
+            }
+
+            .voice-selector {
+                left: 15px;
+                bottom: 15px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video -->
+    <video class="video-background" autoplay muted loop>
+        <source src="https://videos.pexels.com/video-files/3454431/3454431-uhd_2560_1440_25fps.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <span style="font-size: 32px;">📚</span>
+                Spell to Win
+            </div>
+            <div class="header-actions">
+                <button class="auth-btn login-btn" onclick="openLoginModal()">Login</button>
+                <button class="auth-btn signup-btn" onclick="openSignupModal()">Sign Up Free</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1>Master Spelling with AI</h1>
+                <p>Interactive spelling lessons with 4 AI voice options. Learn at your own pace, track your progress, and become a spelling champion.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="openSignupModal()">Get Started Free</button>
+                    <button class="btn btn-secondary" onclick="playDemo()">📹 Watch Demo</button>
+                </div>
+            </div>
+
+            <!-- Floating Widgets -->
+            <div class="floating-widgets">
+                <div class="widget widget1" onmousedown="dragStart(event)">
+                    <div class="widget-header">
+                        ⭐ Premium Features
+                        <span class="widget-close" onclick="this.parentElement.parentElement.style.display='none'">×</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-stat">
+                            <span class="widget-label">Interactive Lessons</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-label">Real-time Feedback</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-label">Progress Tracking</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-label">4 AI Voices</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget widget2" onmousedown="dragStart(event)">
+                    <div class="widget-header">
+                        🎯 Quick Stats
+                        <span class="widget-close" onclick="this.parentElement.parentElement.style.display='none'">×</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-stat">
+                            <span class="widget-label">Words Learned</span>
+                            <span class="widget-value">0</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-label">Accuracy Rate</span>
+                            <span class="widget-value">0%</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-label">Streak Days</span>
+                            <span class="widget-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget widget3" onmousedown="dragStart(event)">
+                    <div class="widget-header">
+                        💡 Did You Know?
+                        <span class="widget-close" onclick="this.parentElement.parentElement.style.display='none'">×</span>
+                    </div>
+                    <div class="widget-content">
+                        The word "accommodate" is one of the most commonly misspelled words in English. It has two C's and two M's.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Selector -->
+    <div class="voice-selector">
+        <div class="voice-label">🎙️ Choose AI Voice</div>
+        <div class="voice-options">
+            <button class="voice-btn active" onclick="selectVoice(this, 'Sarah')">
+                <span class="voice-icon">👩</span> Sarah (US)
+            </button>
+            <button class="voice-btn" onclick="selectVoice(this, 'James')">
+                <span class="voice-icon">👨</span> James (UK)
+            </button>
+            <button class="voice-btn" onclick="selectVoice(this, 'Emma')">
+                <span class="voice-icon">👩‍🎓</span> Emma (Formal)
+            </button>
+            <button class="voice-btn" onclick="selectVoice(this, 'Alex')">
+                <span class="voice-icon">🎭</span> Alex (Dynamic)
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <div class="modal-header">Welcome Back!</div>
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLoginModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="handleLogin()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSignupModal()">&times;</span>
+            <div class="modal-header">Get Started Free</div>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSignupModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="handleSignup()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function openSignupModal() {
+            document.getElementById('signupModal').style.display = 'block';
+        }
+
+        function closeSignupModal() {
+            document.getElementById('signupModal').style.display = 'none';
+        }
+
+        function handleLogin() {
+            alert('Welcome back! Starting your spelling journey...');
+            closeLoginModal();
+        }
+
+        function handleSignup() {
+            alert('Account created successfully! Welcome to Spell to Win!');
+            closeSignupModal();
+        }
+
+        // Voice Selection
+        let selectedVoice = 'Sarah';
+
+        function selectVoice(button, voiceName) {
+            document.querySelectorAll('.voice-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            selectedVoice = voiceName;
+            console.log('Selected voice:', voiceName);
+        }
+
+        // Draggable Widgets
+        let draggedElement = null;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function dragStart(event) {
+            if (event.target.classList.contains('widget-close')) return;
+            draggedElement = event.target.closest('.widget');
+            if (!draggedElement) return;
+            
+            offsetX = event.clientX - draggedElement.offsetLeft;
+            offsetY = event.clientY - draggedElement.offsetTop;
+            draggedElement.style.animation = 'none';
+            
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+        }
+
+        function dragMove(event) {
+            if (!draggedElement) return;
+            draggedElement.style.left = (event.clientX - offsetX) + 'px';
+            draggedElement.style.top = (event.clientY - offsetY) + 'px';
+        }
+
+        function dragEnd() {
+            if (draggedElement) {
+                draggedElement.style.animation = 'float 3s ease-in-out infinite';
+            }
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', dragEnd);
+            draggedElement = null;
+        }
+
+        // Demo Video
+        function playDemo() {
+            alert('🎬 Demo video would open in a player. This showcases the interactive spelling lessons with voice recognition and real-time feedback features!');
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === signupModal) {
+                signupModal.style.display = 'none';
+            }
+        }
+
+        // Log selected voice
+        console.log('Spell to Win loaded! Available voices: Sarah (US), James (UK), Emma (Formal), Alex (Dynamic)');
+    </script>
+</body>
+</html>
